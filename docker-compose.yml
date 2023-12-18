@@ -4,15 +4,19 @@ services:
   redis-db:
     image: redis/redis-stack:latest
     ports:
-      - 6380:6380
+    # - outside: inside
+      - 6380:6379
+      - 8001:8001
     volumes:
       - redis_data:/data
 
   # Using redis as a cache and queue
   # redis-cnq:
-  #   image: redis:latest
+  #   # image: redis:latest
+  #   image: redis/redis-stack:latest
   #   ports:
   #     - 6379:6379
+  #     - 8002:8001
   #   volumes:
   #     - redis_data:/data
   
@@ -21,14 +25,22 @@ services:
       context: ./backend
     ports:
       - 8000:8000
+    volumes:
+    # - local: container
+      - ./backend:/app
     depends_on:
       - redis-db
+      # - redis-cnq
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
 
   reactjs:
     build:
       context: ./frontend
     ports:
       - 3000:3000
+    volumes:
+      - ./frontend:/app
     depends_on:
       - fastapi
 
