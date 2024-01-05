@@ -5,20 +5,10 @@ services:
     image: redis/redis-stack:latest
     ports:
     # - outside: inside
-      - 6380:6379
+      - 6379:6379
       - 8001:8001
     volumes:
       - redis_data:/data
-
-  # Using redis as a cache and queue
-  # redis-cnq:
-  #   # image: redis:latest
-  #   image: redis/redis-stack:latest
-  #   ports:
-  #     - 6379:6379
-  #     - 8002:8001
-  #   volumes:
-  #     - redis_data:/data
   
   fastapi:
     build:
@@ -30,8 +20,8 @@ services:
       - ./backend:/backend
     depends_on:
       - redis-auth
-      # - redis-db
-      # - redis-cnq
+    environment:
+      REDIS_AUTH_HOST: "redis://redis-auth:6379"  # redis://<service>:<port>
     stdin_open: true # docker run -i
     tty: true        # docker run -t
 

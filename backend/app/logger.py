@@ -36,9 +36,8 @@ dictConfig(
     }
 )
 
-stdlogger = logging.getLogger(DevConfig.LOGGER_NAME)
-
 
 def get_logger(service_name="default"):
+    stdlogger = logging.getLogger(DevConfig.LOGGER_NAME)
     logger = logging.LoggerAdapter(stdlogger, {"service": service_name})
     return logger

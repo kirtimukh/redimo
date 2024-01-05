@@ -5,17 +5,15 @@ env = load_dotenv()
 
 
 class Config:
-    CACHE_HOST = os.getenv("CACHE_HOST")
-    CACHE_PORT = int(os.getenv("CACHE_PORT"))
-    SECRET_KEY = os.getenv("SECRET_KEY")
+    DEV_MODE = os.getenv("DEV_MODE", False)
 
-    JWT_ALGORITHM = os.getenv("JWT_ALGORITHM")
-    JWT_EXPIRE_MINUTES = int(os.getenv("JWT_EXPIRE_MINUTES"))
+    SECRET_KEY = os.getenv("SECRET_KEY", "thisisn`tgoodbye,you`realwayshere.!")
 
-    MONGO_HOST = os.getenv("MONGO_HOST")
-    MONGO_USER = os.getenv("MONGO_USER")
-    MONGO_PASS = os.getenv("MONGO_PASS")
+    REDIS_AUTH_HOST = os.getenv("REDIS_AUTH_HOST", "redis://localhost:6379")
+
+    MONGO_HOST = os.getenv("MONGO_HOST", "cluster0.teppelin.mongodb.net")
+    MONGO_USER = os.getenv("MONGO_USER", "ragann")
+    MONGO_PASS = os.getenv("MONGO_PASS", "let`sseeyougritthoseteeth!")
     MONGO_CONN = f"mongodb+srv://{MONGO_USER}:{MONGO_PASS}@{MONGO_HOST}"
 
-    DB_NAME = os.getenv("DB_NAME")
-    DB_COLLECTION = os.getenv("nullcollection")
+    NULLDB = os.getenv("NULLDB")

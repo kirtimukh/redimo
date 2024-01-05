@@ -1,28 +1,27 @@
 import asyncio
 from contextlib import asynccontextmanager
-from typing_extensions import Annotated
 
-
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import OAuth2PasswordBearer
 from fastapi.openapi.utils import get_openapi
+from fastapi.responses import FileResponse
 
-from fastapi_users.authentication import BearerTransport
-
-
-from app.config import Config
+from app.logger import get_logger
 from app.mongodb import init_database
 
+from auth.manager import fastapi_users
+from auth.routers import router as auth_router
+from auth.schemas import UserUpdate, UserRead
 
-from ana.models import User
+logger = get_logger("main.py")
 
 
 @asynccontextmanager
 async def lifespan_manager(app: FastAPI):
     # await init_database()  # this also works
+    logger.info("Starting up...")
     startup_tasks = asyncio.gather(init_database())
-    _ = await startup_tasks
+    await startup_tasks
     yield
 
 
@@ -37,10 +36,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# oauth2_scheme = OAuth2PasswordBearer(tokenUrl="ana/token")
-
-bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
-
 
 def custom_openapi():
     if app.openapi_schema:
@@ -52,6 +47,15 @@ def custom_openapi():
 
 app.openapi = custom_openapi
 
-from ana.routers import router as ana_router
 
-app.include_router(ana_router, prefix="/ana", tags=["ana"])
+app.include_router(auth_router, prefix="/auth", tags=["auth"])
+app.include_router(
+    fastapi_users.get_users_router(UserRead, UserUpdate),
+    prefix="/users",
+    tags=["users"],
+)
+
+
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    return FileResponse("static/favicon.ico")
