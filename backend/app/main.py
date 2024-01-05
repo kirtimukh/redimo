@@ -1,14 +1,34 @@
+import asyncio
+from contextlib import asynccontextmanager
 from typing_extensions import Annotated
+
 
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.openapi.utils import get_openapi
 
+from fastapi_users.authentication import BearerTransport
+
+
 from app.config import Config
+from app.mongodb import init_database
+
+
+from ana.models import User
+
+
+@asynccontextmanager
+async def lifespan_manager(app: FastAPI):
+    # await init_database()  # this also works
+    startup_tasks = asyncio.gather(init_database())
+    _ = await startup_tasks
+    yield
+
+
+app = FastAPI(lifespan=lifespan_manager)
 
 origins = ["*"]
-app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
@@ -17,7 +37,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="ana/token")
+# oauth2_scheme = OAuth2PasswordBearer(tokenUrl="ana/token")
+
+bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
 
 
 def custom_openapi():
@@ -30,17 +52,6 @@ def custom_openapi():
 
 app.openapi = custom_openapi
 
-
 from ana.routers import router as ana_router
 
 app.include_router(ana_router, prefix="/ana", tags=["ana"])
-
-
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
-
-
-@app.get("/about")
-async def about(token: Annotated[str, Depends(oauth2_scheme)]):
-    return {"author": "Uttaran", "redishost": Config.CACHE_HOST, "token": token}

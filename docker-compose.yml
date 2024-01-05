@@ -1,7 +1,7 @@
 version: '3'
 services:
-  # Using redis as a primary database
-  redis-db:
+  # Using redis for auth
+  redis-auth:
     image: redis/redis-stack:latest
     ports:
     # - outside: inside
@@ -27,22 +27,23 @@ services:
       - 8000:8000
     volumes:
     # - local: container
-      - ./backend:/app
+      - ./backend:/backend
     depends_on:
-      - redis-db
+      - redis-auth
+      # - redis-db
       # - redis-cnq
     stdin_open: true # docker run -i
     tty: true        # docker run -t
 
-  reactjs:
-    build:
-      context: ./frontend
-    ports:
-      - 3000:3000
-    volumes:
-      - ./frontend:/app
-    depends_on:
-      - fastapi
+  # reactjs:
+  #   build:
+  #     context: ./frontend
+  #   ports:
+  #     - 3000:3000
+  #   volumes:
+  #     - ./frontend:/app
+  #   depends_on:
+  #     - fastapi
 
 volumes:
   redis_data:

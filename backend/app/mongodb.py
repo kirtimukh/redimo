@@ -1,35 +1,21 @@
-import os
-from dotenv import load_dotenv
-from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
-import logging
+from motor.motor_asyncio import AsyncIOMotorClient
+from beanie import init_beanie
+from ana.models import User
 
 from app.config import Config
+from app.logger import get_logger
 
-load_dotenv()
+service_name = "mongodb"
+logger = get_logger(service_name)
 
-db_client: AsyncIOMotorClient = None
-
-
-async def get_db() -> AsyncIOMotorClient:
-    db_name = Config.app_settings.get("db_name")
-    return db_client[db_name]
+db_client = AsyncIOMotorClient(Config.MONGO_CONN)
+nulldb = db_client[Config.DB_NAME]
 
 
-async def connect_and_init_db():
-    global db_client
-    try:
-        db_client = AsyncIOMotorClient(Config.MONGO_CONN)
-        logging.info("Connected to mongo.")
-    except Exception as e:
-        logging.exception(f"Could not connect to mongo: {e}")
-        raise
-
-
-async def close_db_connect():
-    global db_client
-    if db_client is None:
-        logging.warning("Connection is None, nothing to close.")
-        return
-    db_client.close()
-    db_client = None
-    logging.info("Mongo connection closed.")
+async def init_database():
+    await init_beanie(
+        database=nulldb,
+        document_models=[
+            User,
+        ],
+    )

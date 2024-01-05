@@ -1,22 +1,25 @@
-from pydantic import BaseModel, EmailStr
-from typing import Union
+import bson
+from beanie import Document
+from fastapi_users import schemas
+from fastapi_users.db import BeanieBaseUser, BeanieUserDatabase
 
 
-class Token(BaseModel):
-    access_token: str
-    token_type: str
+class User(BeanieBaseUser, Document):
+    pass
 
 
-class TokenData(BaseModel):
-    username: Union[str, None] = None
+async def get_user_db():
+    yield BeanieUserDatabase(User)
 
 
-class User(BaseModel):
-    username: str
-    email: Union[EmailStr, None] = None
-    full_name: Union[str, None] = None
-    disabled: Union[bool, None] = None
+# Schemas; for FastAPI to use to validate IO
+class UserRead(schemas.BaseUser[bson.ObjectId]):
+    pass
 
 
-class UserInDB(User):
-    hashed_password: str
+class UserCreate(schemas.BaseUserCreate):
+    pass
+
+
+class UserUpdate(schemas.BaseUserUpdate):
+    pass

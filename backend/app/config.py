@@ -16,3 +16,6 @@ class Config:
     MONGO_USER = os.getenv("MONGO_USER")
     MONGO_PASS = os.getenv("MONGO_PASS")
     MONGO_CONN = f"mongodb+srv://{MONGO_USER}:{MONGO_PASS}@{MONGO_HOST}"
+
+    DB_NAME = os.getenv("DB_NAME")
+    DB_COLLECTION = os.getenv("nullcollection")
