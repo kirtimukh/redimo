@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import ActionGroupMini from './ActionGroupMini';
+import { AGMini, AGInput } from './AGComponents';
 import ActionGroupDetail from './ActionGroupDetail';
 import { Tooltip } from 'react-tooltip'
 import { fakeActionGroups } from '../../faked_data/actionGroups';
@@ -14,9 +14,11 @@ const XBoard = ({
     const [actionGroups, setActionGroups] = useState([]);
     const [lastGroupId, setLastGroupId] = useState(100);
 
-    const addActionGroup = (e) => {
-        setActionGroups(prevActionGroups => [...prevActionGroups, { fieldno: lastGroupId }]);
-        setLastGroupId(lastGroupId + 1);
+    const [showAGIn, setShowAGIn] = useState(false);
+
+    const showAGInputFn = (e) => {
+        console.log('add button pressed');
+        setShowAGIn(true);
         e.stopPropagation();
     }
 
@@ -55,16 +57,16 @@ const XBoard = ({
                                 className="rounded-full text-xl h-6 w-6
                                     hover:bg-black hover:text-white
                                     leading-none"
-                                onClick={(e) => addActionGroup(e)}
+                                onClick={(e) => showAGInputFn(e)}
                             >&#43;
                             </button>
                             <Tooltip id="my-tooltip" />
                         </div>
                     </div>
                     <div className='w-full flex-grow'>
-                        {actionGroups.map(actionGroup => <ActionGroupMini key={actionGroup.fieldno} fieldno={actionGroup.fieldno} name={""} />)}
+                        {showAGIn && <AGInput dismissInput={() => setShowAGIn(false)} />}
 
-                        {Object.values(fakeActionGroups).map(actionGroup => <ActionGroupMini key={actionGroup.id}
+                        {Object.values(fakeActionGroups).map(actionGroup => <AGMini key={actionGroup.id}
                             fieldno={actionGroup.id}
                             groupId={actionGroup.id}
                             name={actionGroup.name}

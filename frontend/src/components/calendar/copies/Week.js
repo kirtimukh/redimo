@@ -3,7 +3,8 @@ import dayjs from "dayjs";
 import Draggable from 'react-draggable';
 
 import EventModal from '../../modals/createEventModal';
-import { centerAndShow, updateCalendarZState, updateComponentZState } from '../../utils';
+import { centerAndShow } from '../../utils';
+import { updateCalendarZState, updateComponentZState } from '../../utils/ZManager';
 
 export default function Week({ zStack, setZStack, parentSP }) {
   const componentName = 'Week';

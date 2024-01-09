@@ -4,7 +4,7 @@ import DraggableX from '../DraggableX';
 const Calendar = () => {
     const allowedComponents = ['XMonth', 'XWeek', 'XBoard']
     const showMonth = false
-    const showWeek = true
+    const showWeek = false
     const showBoard = true
     const [parentSP, setParentSP] = useState({
         boxWidth: 0,

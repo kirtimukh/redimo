@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 
-import { centerAndShow, updateCalendarZState, updateComponentZState } from '../utils';
+import { centerAndShow, } from '../utils';
+import { updateCalendarZState, updateComponentZState } from '../../utils/ZManager';
 
 
 const HOC = (WrappedComponent) => {
