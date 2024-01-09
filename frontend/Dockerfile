@@ -2,10 +2,10 @@
 FROM node:14-alpine
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /frontend
 
 # Copy the package.json and package-lock.json files to the container
-COPY package*.json ./
+COPY package*.json .
 
 # Install the dependencies
 RUN npm install
@@ -21,3 +21,7 @@ EXPOSE 3000
 
 # Set the command to run the app
 CMD ["npm", "start"]
+
+# To serve build folder
+# RUN npm install -g serve
+# CMD ["serve", "-s", "build"]

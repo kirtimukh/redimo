@@ -13,6 +13,8 @@ from auth.manager import fastapi_users
 from auth.routers import router as auth_router
 from auth.schemas import UserUpdate, UserRead
 
+from execution.routers import router as execution_router
+
 logger = get_logger("main.py")
 
 
@@ -53,6 +55,11 @@ app.include_router(
     fastapi_users.get_users_router(UserRead, UserUpdate),
     prefix="/users",
     tags=["users"],
+)
+app.include_router(
+    execution_router,
+    prefix="/execution",
+    tags=["execution"],
 )
 
 

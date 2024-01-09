@@ -9,7 +9,7 @@ services:
       - 8001:8001
     volumes:
       - redis_data:/data
-  
+
   fastapi:
     build:
       context: ./backend
@@ -25,15 +25,15 @@ services:
     stdin_open: true # docker run -i
     tty: true        # docker run -t
 
-  # reactjs:
-  #   build:
-  #     context: ./frontend
-  #   ports:
-  #     - 3000:3000
-  #   volumes:
-  #     - ./frontend:/app
-  #   depends_on:
-  #     - fastapi
+  reactjs:
+    build:
+      context: ./frontend
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/frontend
+    depends_on:
+      - fastapi
 
 volumes:
   redis_data:

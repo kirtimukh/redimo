@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# Tool to schedule and track your mission
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+See the partial and incomplete [demo](https://nullbaka.github.io/nullcalendar/) here.
 
 ## Available Scripts
 
