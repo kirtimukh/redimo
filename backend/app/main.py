@@ -58,8 +58,8 @@ app.include_router(
 )
 app.include_router(
     execution_router,
-    prefix="/execution",
-    tags=["execution"],
+    prefix="/xboard",
+    tags=["xboard"],
 )
 
 

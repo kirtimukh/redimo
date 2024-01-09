@@ -10,8 +10,6 @@ from pydantic import BaseModel
 
 class ActionGroupCreate(BaseModel):
     name: str
-    description: str
-    type: str
 
 
 class TastSetRead(BaseModel):
@@ -23,12 +21,8 @@ class TastSetRead(BaseModel):
 
 class XBoardCreate(BaseModel):
     name: str
-    description: str
-    type: str
 
 
 class XBoardRead(BaseModel):
     name: str
     description: str
-    type: str
-    tasks: list[ActionGroup]
