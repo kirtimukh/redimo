@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import TaskItem from './TaskItem';
+import { PInput } from '../reusables';
 
 
-const ActionGroupDetail = ({ fieldno, remove, groupId, actionGroup }) => {
-    const tasklist = actionGroup.tasks;
-    const handleRemove = () => {
-        console.log('remove button pressed');
-        remove(fieldno);
+const ActionGroupDetail = ({ fieldno, groupId, actionGroup }) => {
+    const [editedAGDetails, setEditedAGDetails] = useState(actionGroup);
+    let tasklist = editedAGDetails.tasks;
+
+    if (tasklist.length === 0) {
+        tasklist = [{ id: 0, name: '..make an entry to save this action group', description: 'Add task description here..' }];
     }
 
     const handleKeyDown = (event) => {
@@ -36,16 +38,12 @@ const ActionGroupDetail = ({ fieldno, remove, groupId, actionGroup }) => {
         <>
             <div>
                 <div className='relative flex justify-between w-full'>
-                    <p>
-                        {actionGroup.description}
-                    </p>
-                    <button
-                        className='hover:bg-black hover:text-white w-8'
-                        onClick={handleRemove}
-                    >Edit</button>
+                    <PInput textValue={editedAGDetails.description} />
                 </div >
                 <div className='bg-slate-200'>
-                    {tasklist.map(taskItem => <TaskItem key={taskItem.id} fieldno={taskItem.id} count={2} remove={removeTaskItem} taskData={taskItem} />)}
+                    {tasklist.map(taskItem => {
+                        return <TaskItem key={taskItem.id} fieldno={taskItem.id} remove={removeTaskItem} taskData={taskItem} />
+                    })}
                 </div>
             </div>
         </>

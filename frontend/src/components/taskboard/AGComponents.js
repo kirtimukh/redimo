@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import axios from 'axios'
 import { debounce } from '../utils'
 
@@ -25,9 +25,22 @@ const AGMini = ({ fieldno, groupId, name, showGroupDetailFn }) => {
 }
 
 
-const AGInput = ({ dismissInput }) => {
+const AGInput = ({ dismissInput, showAddDetailsForm }) => {
     const [inputStatus, setInputStatus] = useState('empty');
     const [inputValue, setInputValue] = useState('');
+
+    const updateInputValue = (value, status) => {
+        console.log('updateInputValue called');
+        if (status === 'valid') {
+            setInputStatus('ready');
+        }
+        setInputValue(value)
+    }
+
+    const debouncedUpdateInputValue = useCallback(
+        debounce(updateInputValue, 500),
+        []
+    );
 
     const handleInputChange = (event) => {
         let value = event.target.value
@@ -39,15 +52,7 @@ const AGInput = ({ dismissInput }) => {
             newInputStatus = 'empty';
             setInputStatus(newInputStatus);
         }
-        const debouncedUpdateInputValue = debounce(updateInputValue, 500);
         debouncedUpdateInputValue(value, newInputStatus);
-    }
-
-    const updateInputValue = (value, status) => {
-        if (status === 'valid') {
-            setInputStatus('ready');
-        }
-        setInputValue(value)
     }
 
     const handleKeyDown = (event) => {
@@ -56,11 +61,15 @@ const AGInput = ({ dismissInput }) => {
             return;
         }
         if (event.key !== 'Enter') return;
-        handleInput()
+        if (inputStatus === 'ready') {
+            handleInput()
+        }
     }
 
     const handleClick = () => {
-        handleInput()
+        if (inputStatus === 'ready') {
+            handleInput()
+        }
     }
 
     const handleInput = () => {
@@ -68,16 +77,17 @@ const AGInput = ({ dismissInput }) => {
             return;
         }
 
-        axios.post('http://localhost:8000/xboard/659d440124fb2482a6cfd982/add_action_group', { name: inputValue })
-            .then(response => {
-                console.log(response.data);
-                // handle success here
-            })
-            .catch(error => {
-                console.log(error);
-                // handle error here
-            });
+        showAddDetailsForm();
 
+        // axios.post('http://localhost:8000/xboard/659d440124fb2482a6cfd982/add_action_group', { name: inputValue })
+        //     .then(response => {
+        //         console.log(response.data);
+        //         // handle success here
+        //     })
+        //     .catch(error => {
+        //         console.log(error);
+        //         // handle error here
+        //     });
 
     }
 

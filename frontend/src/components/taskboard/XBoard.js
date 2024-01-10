@@ -11,19 +11,12 @@ const XBoard = ({
     displayEventModal,
     contextProps
 }) => {
-    const [actionGroups, setActionGroups] = useState([]);
-    const [lastGroupId, setLastGroupId] = useState(100);
 
     const [showAGIn, setShowAGIn] = useState(false);
 
     const showAGInputFn = (e) => {
-        console.log('add button pressed');
         setShowAGIn(true);
         e.stopPropagation();
-    }
-
-    const removeActionGroup = (fieldno) => {
-        setActionGroups(prevActionGroups => prevActionGroups.filter(actionGroup => actionGroup.fieldno !== fieldno));
     }
 
     const [showGroupDetail, setShowGroupDetail] = useState(false);
@@ -40,6 +33,21 @@ const XBoard = ({
         });
         setShowGroupDetail(true);
         setSelectedGroupId(groupId);
+    }
+    const showNewGroupDetailFn = (name) => {
+        const actionGroup = {
+            'id': null,
+            'name': 'AG: Study',
+            'description': 'Add description here..',
+            'type': 'non/recurring',
+            'tasks': []
+        }
+        setGroupDetails({
+            actionGroup,
+            groupId: null
+        });
+        setShowGroupDetail(true);
+        setSelectedGroupId(null);
     }
 
     return (
@@ -64,7 +72,7 @@ const XBoard = ({
                         </div>
                     </div>
                     <div className='w-full flex-grow'>
-                        {showAGIn && <AGInput dismissInput={() => setShowAGIn(false)} />}
+                        {showAGIn && <AGInput dismissInput={() => setShowAGIn(false)} showAddDetailsForm={showNewGroupDetailFn} />}
 
                         {Object.values(fakeActionGroups).map(actionGroup => <AGMini key={actionGroup.id}
                             fieldno={actionGroup.id}
@@ -77,7 +85,6 @@ const XBoard = ({
                 <div className='basis-3/4'>
                     {showGroupDetail && <ActionGroupDetail
                         key={groupDetails.groupId}
-                        remove={removeActionGroup}
                         groupId={groupDetails.groupId}
                         actionGroup={groupDetails.actionGroup}
                     />}

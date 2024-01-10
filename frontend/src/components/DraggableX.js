@@ -46,6 +46,7 @@ const DraggableX = ({
             <Draggable
                 bounds="parent"
                 nodeRef={nodeRef}
+                cancel='input'
                 onDrag={() => setIsDragging(true)}
                 onStop={() => {
                     setTimeout(() => {
