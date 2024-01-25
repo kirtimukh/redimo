@@ -5,9 +5,7 @@ from auth.models import User
 from app.config import Config
 from app.logger import get_logger
 
-from execution.models import XBoard, ActionGroup
-
-document_models = [User, XBoard, ActionGroup]
+document_models = [User]
 
 service_name = "mongodb"
 logger = get_logger(service_name)
